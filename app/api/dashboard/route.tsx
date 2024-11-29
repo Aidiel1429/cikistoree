@@ -10,5 +10,10 @@ export async function GET() {
     },
   });
 
-  return NextResponse.json(data);
+  // Nonaktifkan caching untuk memastikan data selalu fresh
+  return NextResponse.json(data, {
+    headers: {
+      "Cache-Control": "no-store, max-age=0",
+    },
+  });
 }
