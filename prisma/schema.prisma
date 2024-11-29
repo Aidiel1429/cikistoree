@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model TransaksiTb {
+  id          Int           @id @default(autoincrement())
+  nama        String
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  PenjualanTb PenjualanTb[]
+}
+
+model PenjualanTb {
+  id            Int      @id @default(autoincrement())
+  nama          String
+  tanggal       DateTime
+  namaPelanggan String
+  pendapatan    Int
+  modal         Int
+  status        String
+  kategori      String
+  transaksiId   Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  TransaksiTb TransaksiTb @relation(fields: [transaksiId], references: [id], onDelete: Cascade)
+  HutangTb    HutangTb[]
+}
+
+model HutangTb {
+  id          Int      @id @default(autoincrement())
+  nama        String
+  hutang      Int
+  penjualanId Int?
+  tanggal     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  PenjualanTb PenjualanTb? @relation(fields: [penjualanId], references: [id], onDelete: Cascade)
+}
+
+model ProdukTb {
+  id           Int            @id @default(autoincrement())
+  nama         String
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+  ListProdukTb ListProdukTb[]
+}
+
+model ListProdukTb {
+  id        Int      @id @default(autoincrement())
+  nama      String
+  harga     Int
+  produkId  Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ProdukTb ProdukTb @relation(fields: [produkId], references: [id], onDelete: Cascade)
+}
