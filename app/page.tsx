@@ -15,12 +15,14 @@ const Dashboard = () => {
   const [totalUntung, setTotalUntung] = useState(0);
 
   useEffect(() => {
-    fetchData();
+    reload();
   }, []);
 
-  const fetchData = async () => {
+  const reload = async () => {
     try {
-      const res = await axios.get("/api/dashboard");
+      const res = await axios.get("/api/dashboard", {
+        headers: { "Cache-Control": "no-store" }, // Pastikan client tidak cache
+      });
       const data: Transaksi[] = res.data;
 
       setTransaksi(data);
