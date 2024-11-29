@@ -11,12 +11,7 @@ export async function GET() {
       },
     });
 
-    // Nonaktifkan cache di respons
-    return NextResponse.json(data, {
-      headers: {
-        "Cache-Control": "no-store, max-age=0, must-revalidate", // Pastikan data selalu fresh
-      },
-    });
+    return NextResponse.json(data);
   } catch (error) {
     console.error("Error fetching data:", error);
     return NextResponse.json(
