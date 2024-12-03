@@ -91,6 +91,26 @@ const Transaksi = () => {
 
   return (
     <div className="lg:ml-[260px]">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 mb-5">
+        <div className="p-4 bg-white shadow-md rounded-lg">
+          <h1 className="font-semibold text-slate-500 mb-2">Total Penjualan</h1>
+          <p className="text-xl font-semibold text-slate-700">3</p>
+        </div>
+        <div className="p-4 bg-white shadow-md rounded-lg">
+          <h1 className="font-semibold text-slate-500 mb-2">
+            Total Pendapatan
+          </h1>
+          <p className="text-xl font-semibold text-green-600">Rp 3</p>
+        </div>
+        <div className="p-4 bg-white shadow-md rounded-lg">
+          <h1 className="font-semibold text-slate-500 mb-2">Total Modal</h1>
+          <p className="text-xl font-semibold text-red-600">Rp 3</p>
+        </div>
+        <div className="p-4 bg-white shadow-md rounded-lg">
+          <h1 className="font-semibold text-slate-500 mb-2">Total Untung</h1>
+          <p className="text-xl font-semibold text-blue-600">Rp 3</p>
+        </div>
+      </div>
       <div className="p-4 bg-white shadow-md rounded-lg w-full">
         <h1 className="mb-2 text-lg font-semibold">Halaman Transaksi</h1>
 
@@ -186,7 +206,7 @@ const Transaksi = () => {
                         </Link>
                         <button
                           className="text-red-500 hover:text-red-700"
-                          onClick={() => alert("Fitur hapus belum tersedia")}
+                          onClick={() => openDeleteModal(item.id)}
                         >
                           <FiTrash size={20} />
                         </button>
