@@ -16,8 +16,15 @@ interface TransaksiProps {
   };
 }
 
+interface PenjualanProps {
+  id: number;
+  pendapatan: number;
+  modal: number;
+}
+
 const Transaksi = () => {
   const [transaksi, setTransaksi] = useState<TransaksiProps[]>([]);
+  const [penjualan, setPenjualan] = useState<PenjualanProps[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -27,8 +34,14 @@ const Transaksi = () => {
   const [alertGagal, setAlertGagal] = useState(false);
   const [pesan, setPesan] = useState("");
 
+  const [totalPenjualan, setTotalPenjualan] = useState(0);
+  const [totalPendapatan, setTotalPendapatan] = useState(0);
+  const [totalModal, setTotalModal] = useState(0);
+  const [totalUntung, setTotalUntung] = useState(0);
+
   useEffect(() => {
     fetchData();
+    loadPenjualan();
   }, []);
 
   useEffect(() => {
@@ -52,6 +65,36 @@ const Transaksi = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const loadPenjualan = async () => {
+    try {
+      const res = await axios.get("/api/dashboard");
+      const data = res.data;
+      setPenjualan(data);
+      calculateTotals(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const calculateTotals = (penjualan: PenjualanProps[]) => {
+    let totalPenjualan = 0;
+    let totalPendapatan = 0;
+    let totalModal = 0;
+    let totalUntung = 0;
+
+    penjualan.forEach((item) => {
+      totalPenjualan += 1;
+      totalPendapatan += item.pendapatan;
+      totalModal += item.modal;
+      totalUntung += item.pendapatan - item.modal; // Untung = Pendapatan - Modal
+    });
+
+    setTotalPenjualan(totalPenjualan);
+    setTotalPendapatan(totalPendapatan);
+    setTotalModal(totalModal);
+    setTotalUntung(totalUntung);
   };
 
   const handleDelete = async () => {
@@ -94,21 +137,29 @@ const Transaksi = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 mb-5">
         <div className="p-4 bg-white shadow-md rounded-lg">
           <h1 className="font-semibold text-slate-500 mb-2">Total Penjualan</h1>
-          <p className="text-xl font-semibold text-slate-700">3</p>
+          <p className="text-xl font-semibold text-slate-700">
+            {totalPenjualan}
+          </p>
         </div>
         <div className="p-4 bg-white shadow-md rounded-lg">
           <h1 className="font-semibold text-slate-500 mb-2">
             Total Pendapatan
           </h1>
-          <p className="text-xl font-semibold text-green-600">Rp 3</p>
+          <p className="text-xl font-semibold text-green-600">
+            Rp {totalPendapatan.toLocaleString()}
+          </p>
         </div>
         <div className="p-4 bg-white shadow-md rounded-lg">
           <h1 className="font-semibold text-slate-500 mb-2">Total Modal</h1>
-          <p className="text-xl font-semibold text-red-600">Rp 3</p>
+          <p className="text-xl font-semibold text-red-600">
+            Rp {totalModal.toLocaleString()}
+          </p>
         </div>
         <div className="p-4 bg-white shadow-md rounded-lg">
           <h1 className="font-semibold text-slate-500 mb-2">Total Untung</h1>
-          <p className="text-xl font-semibold text-blue-600">Rp 3</p>
+          <p className="text-xl font-semibold text-blue-600">
+            Rp {totalUntung.toLocaleString()}
+          </p>
         </div>
       </div>
       <div className="p-4 bg-white shadow-md rounded-lg w-full">
